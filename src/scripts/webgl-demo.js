@@ -63,7 +63,7 @@ export function main(canvas) {
 
   // Here's where we call the routine that builds all the
   // objects we'll be drawing.
-  const buffers = initBuffers(gl, 20);
+  const buffers = initBuffers(gl, 50);
 
   // Draw the scene
   drawScene(gl, programInfo, buffers);

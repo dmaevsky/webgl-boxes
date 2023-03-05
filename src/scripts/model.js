@@ -9,8 +9,9 @@ function calcOffsets(boxes, cWidth) {
     let j = i, lineWidth = 0., maxHeight = 0.;
 
     while (j < boxes.length) {
-      const [dx, dy] = boxes[j++];
+      const [dx, dy] = boxes[j];
       if (lineWidth + dx > cWidth) break;
+      else j++;
 
       lineWidth += dx;
       if (dy > maxHeight) maxHeight = dy;
@@ -28,12 +29,14 @@ function calcOffsets(boxes, cWidth) {
   return [result, 0.5 * offsetY];
 }
 
-export function generateVertices(n) {
-  const boxes = [...Array(n)].map(_ => [
+export function generateBoxes(n) {
+  return [...Array(n)].map(_ => [
     0.2 * (1.5 - Math.random()),
     0.4 * (1.5 - Math.random())
   ]);
+}
 
+export function calcVertices(boxes) {
   const [offsets, h] = calcOffsets(boxes, 2.);
   const vertices = [];
 

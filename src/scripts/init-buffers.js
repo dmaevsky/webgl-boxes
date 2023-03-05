@@ -1,23 +1,21 @@
-import { generateVertices } from './model.js';
+import { generateBoxes } from './model.js';
 
 export function initBuffers(gl, n) {
   const positionBuffer = initPositionBuffer(gl, n);
   const colorBuffer = initColorBuffer(gl, n);
 
   return {
-    n,
+    boxes: generateBoxes(n),
     position: positionBuffer,
     color: colorBuffer,
   };
-  }
+}
 
 function initPositionBuffer(gl, n) {
-  const positions = generateVertices(n);
-
   const positionBuffer = gl.createBuffer();
 
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, n * 12 * 4, gl.DYNAMIC_DRAW);
 
   return positionBuffer;
 }

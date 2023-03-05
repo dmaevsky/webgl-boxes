@@ -1,14 +1,7 @@
 import { mat4 } from 'gl-matrix';
+import { calcVertices } from './model.js';
 
 export function drawScene(gl, programInfo, buffers) {
-  gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
-  gl.clearDepth(1.0); // Clear everything
-  gl.enable(gl.DEPTH_TEST); // Enable depth testing
-  gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-
-  // Clear the canvas before we start drawing on it.
-
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // Create a perspective matrix, a special matrix that is
   // used to simulate the distortion of perspective in a camera.
@@ -36,7 +29,7 @@ export function drawScene(gl, programInfo, buffers) {
   mat4.translate(
     modelViewMatrix, // destination matrix
     modelViewMatrix, // matrix to translate
-    [-0.0, 0.0, -3.0]
+    [-0.0, 0.0, -4.0]
   ); // amount to translate
 
   // Tell WebGL how to pull out the positions from the position
@@ -59,11 +52,33 @@ export function drawScene(gl, programInfo, buffers) {
     modelViewMatrix
   );
 
-  {
-    const offset = 0;
-    const vertexCount = buffers.n * 6;
+  let nBoxes = 1;
+  const offset = 0;
+
+  function render() {
+    gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
+    gl.clearDepth(1.0); // Clear everything
+    gl.enable(gl.DEPTH_TEST); // Enable depth testing
+    gl.depthFunc(gl.LEQUAL); // Near things obscure far things
+
+    // Clear the canvas before we start drawing on it.
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    const vertices = calcVertices(buffers.boxes.slice(0, nBoxes));
+    const vertexCount = vertices.length / 2;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+    gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(vertices));
+
     gl.drawArrays(gl.TRIANGLES, offset, vertexCount);
+
+    nBoxes++;
+    if (nBoxes < buffers.boxes.length) {
+      setTimeout(render, 100);
+    }
   }
+  render();
 }
 
 // Tell WebGL how to pull out the positions from the position
