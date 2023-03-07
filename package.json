@@ -16,7 +16,7 @@
   "author": "Dmitry Maevsky",
   "license": "MIT",
   "dependencies": {
-    "@ellx/framework": "^0.0.6",
+    "@ellx/framework": "^0.0.7",
     "gl-matrix": "^3.4.3"
   },
   "devDependencies": {
